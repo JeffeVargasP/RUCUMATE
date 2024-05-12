@@ -28,7 +28,7 @@
   "prisma": {
     "schema": "src/prisma/schema.prisma"
   },
-  "name": "RUCUMATE",
+  "name": "RUCUMATE-API",
   "version": "1.0.0",
   "main": "index.ts",
   "repository": "git@github.com:JeffeVargasP/RUCUMATE.git",
