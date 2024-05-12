@@ -25,6 +25,9 @@
     "vercel-build": "npx prisma generate && npx prisma migrate deploy && npx yarn build",
     "prisma": "npx prisma"
   },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
+  },
   "name": "RUCUMATE",
   "version": "1.0.0",
   "main": "index.ts",
