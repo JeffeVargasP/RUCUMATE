@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import { database } from "../../../database";
-import { hashPassword } from "../../utils/generateToken";
+import { hashPassword } from "../../middleware/auth";
 
 export const createUser: Express = express();
 

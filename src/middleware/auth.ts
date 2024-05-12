@@ -1,33 +1,38 @@
-import { verify } from 'jsonwebtoken';
-import { User } from '../models/user';
-import { config } from '../config';
+import { sign, verify } from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { config } from '../../config';
 
-
-function authenticate(req: any, res: any, next: any) {
-    const token = req.headers.authorization;
-    const secret = config.secret;
-
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided.' });
-    }
-
-    verify(token, secret, (err: any, decoded: any) => {
-        if (err) {
-            return res.status(403).json({ message: 'Failed to authenticate token.' });
-        }
-
-        User.findByPk(decoded.id)
-            .then((user: any) => {
-                if (!user) {
-                    return res.status(401).json({ message: 'User not found.' });
-                }
-
-                req.user = user;
-                next();
-            })
-            .catch((error: any) => {
-                console.error('Error retrieving user:', error);
-                res.status(500).json({ message: 'Internal server error.' });
-            });
-    });
+interface User {
+    email: string;
 }
+
+function generateToken(email: string): string {
+    const secret = config.secret;
+    const token = sign({ email }, secret, {
+        expiresIn: '1h',
+    });
+    return token;
+}
+
+function verifyToken(token: string): User {
+    try {
+        const secret = config.secret;
+        const decoded = verify(token, secret) as User;
+        return decoded;
+    } catch (error) {
+        throw new Error('Invalid token');
+    }
+}
+
+async function hashPassword(password: string): Promise<string> {
+    const saltRounds = config.saltRounds;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
+}
+
+async function comparePassword(password: string, hashedPassword: string): Promise<boolean> {
+    const result = await bcrypt.compare(password, hashedPassword);
+    return result;
+}
+
+export { generateToken, verifyToken, hashPassword, comparePassword };

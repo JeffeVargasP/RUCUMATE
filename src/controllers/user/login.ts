@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from "express";
-import { generateToken, comparePassword } from "../../utils/generateToken";
+import { generateToken, comparePassword } from "../../middleware/auth";
 import { database } from "../../../database";
 
 export const loginUser: Express = express();
