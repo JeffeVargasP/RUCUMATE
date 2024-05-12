@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  name         String?
+  password     String
+  Espressif    Espressif[]
+  Notification Notification[]
+}
+
+model Espressif {
+  id          String @id @default(cuid())
+  sensorId    String
+  temperature Float
+  humidity    Float
+  user        User   @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model Notification {
+  id      String @id @default(cuid())
+  content String
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+}
+
+model RefreshToken {
+  id           String @id @default(cuid())
+  token        String
+  userId       String
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
