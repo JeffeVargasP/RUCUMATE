@@ -104,5 +104,4 @@ dist
 .tern-port
 
 # Config file
-config.ts
 .vercel
