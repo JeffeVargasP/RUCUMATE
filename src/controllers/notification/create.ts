@@ -1,23 +1,20 @@
-const express = require("express");
-const app = express();
-const database = require("../../db");
-const Notification = require("../../models/notificationModel");
+import express, { Express, Request, Response } from "express";
+import { database } from "../../../database";
 
-app.post("/generate", async (req, res) => {
+export const createNotification: Express = express();
+
+createNotification.post("/generate", async (req: Request, res: Response) => {
     const { user_id, content } = req.body;
 
     try {
-
         if (!user_id || !content) {
             res.status(400).json({
                 message: "user_id and content are required"
             });
         } else {
 
-            notification.sync();
-
-            const existingNotification = await Notification.findOne({
-                where: { content: content }
+            const existingNotification = await database.notification.findFirst({
+                where: { content }
             });
 
             if (existingNotification) {
@@ -25,9 +22,11 @@ app.post("/generate", async (req, res) => {
                     message: "Notification already exists"
                 });
             } else {
-                const notification = await Notification.create({
-                    user_id: user_id,
-                    content: content
+                const notification = await database.notification.create({
+                    data: {
+                        userId: user_id,
+                        content: content
+                    }
                 });
                 res.status(200).json({
                     notification
@@ -40,5 +39,3 @@ app.post("/generate", async (req, res) => {
         });
     }
 });
-
-module.exports = app;

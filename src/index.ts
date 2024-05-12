@@ -1,17 +1,25 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const helmet = require("helmet");
-const userRoutes = require("./routes/userRoutes");
-const notificationRoutes = require("./routes/notificationRoutes");
-const espRoutes = require("./routes/espRouters");
-const app = express();
+import express, { Express, NextFunction, Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import helmet from 'helmet';
+import { config } from '../config';
+
+// Routers
+
+import { userRoutes } from './routes/user';
+import { espRoutes } from './routes/esp';
+import { notificationRoutes } from './routes/notification';
+
+
+const app: Express = express();
+const { serverPort } = config;
+
 
 // Middleware
-
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// CORS
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header(
@@ -27,7 +35,6 @@ app.use((req, res, next) => {
 });
 
 // Server Status
-
 app.get("/", (req, res) => {
     res.status(200).json({
         message: "Server is running"
@@ -35,14 +42,10 @@ app.get("/", (req, res) => {
 });
 
 // Routers
-
 app.use("/user", userRoutes);
 app.use("/esp", espRoutes);
 app.use("/notification", notificationRoutes);
-app.use((req, res, next) => {
-    const error = new Error("Not found");
-    error.status = 404;
-    next();
-});
 
-module.exports = app;
+app.listen(serverPort, () => {
+    console.log(`Server is running on port ${serverPort}`);
+});
