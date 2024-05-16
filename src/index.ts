@@ -13,9 +13,10 @@ import { notificationRoutes } from './routes/notification';
 const app: Express = express();
 const { serverPort } = config;
 
-app.use(cors());
-
 // Middleware
+app.use((req: Request, res: Response, next: NextFunction) => {
+    next();
+  }, cors({ maxAge: 84600 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
