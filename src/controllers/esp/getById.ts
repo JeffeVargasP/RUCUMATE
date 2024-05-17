@@ -14,7 +14,7 @@ getEspDataById.get("/id/sensor/:sensor_id", async (req: Request, res: Response) 
         } else {
 
             const data = await database.espressif.findMany({
-                where: { sensorId: +sensorId },
+                where: { sensorId },
 
             });
 
