@@ -5,11 +5,11 @@ import { hashPassword } from "../../middleware/auth";
 export const createUser: Express = express();
 
 createUser.post("/", async (req: Request, res: Response) => {
-    const { password, email, username } = req.body;
+    const { password, email, name } = req.body;
 
-    if (!password || !email) {
+    if (!password || !email || !name) {
         return res.status(400).json({
-            message: "Bad request - password and email are required",
+            message: "Bad request - password, email and name are required",
         });
     }
 
@@ -33,6 +33,7 @@ createUser.post("/", async (req: Request, res: Response) => {
 
     const createUser = await database.user.create({
         data: {
+            name,
             email,
             password: hashedPasswd,
         }
