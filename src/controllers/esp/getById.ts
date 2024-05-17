@@ -4,7 +4,7 @@ import { database } from "../../../database";
 export const getEspDataById: Express = express();
 
 getEspDataById.get("/id/sensor/:sensor_id", async (req: Request, res: Response) => {
-    const sensorId = req.params.sensor_id;
+    const sensorId = +req.params.sensor_id;
 
     try {
         if (!sensorId) {
