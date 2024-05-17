@@ -15,26 +15,26 @@ model User {
   password     String
   Espressif    Espressif[]
   Notification Notification[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 }
 
 model Espressif {
-  id          String @id @default(cuid())
+  id          Int      @id @default(autoincrement())
   sensorId    String
   temperature Float
   humidity    Float
-  user        User   @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
   userId      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Notification {
-  id      String @id @default(cuid())
-  content String
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String
+  id        String   @id @default(cuid())
+  content   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
