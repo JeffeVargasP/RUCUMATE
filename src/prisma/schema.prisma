@@ -20,8 +20,8 @@ model User {
 }
 
 model Espressif {
-  id          Int      @id @default(autoincrement())
-  sensorId    String
+  id          String   @id @default(cuid())
+  sensorId    Int      @unique
   temperature Float
   humidity    Float
   user        User     @relation(fields: [userId], references: [id])
