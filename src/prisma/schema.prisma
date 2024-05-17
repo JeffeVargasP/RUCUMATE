@@ -15,6 +15,8 @@ model User {
   password     String
   Espressif    Espressif[]
   Notification Notification[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Espressif {
@@ -24,6 +26,8 @@ model Espressif {
   humidity    Float
   user        User   @relation(fields: [userId], references: [id])
   userId      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Notification {
@@ -31,6 +35,8 @@ model Notification {
   content String
   user    User   @relation(fields: [userId], references: [id])
   userId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model RefreshToken {

@@ -5,7 +5,7 @@ import { hashPassword } from "../../middleware/auth";
 export const createUser: Express = express();
 
 createUser.post("/", async (req: Request, res: Response) => {
-    const { password, email } = req.body;
+    const { password, email, username } = req.body;
 
     if (!password || !email) {
         return res.status(400).json({
