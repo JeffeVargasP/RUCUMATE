@@ -4,12 +4,12 @@ import { database } from "../../../database";
 export const createEspData: Express = express();
 
 createEspData.post("/", async (req: Request, res: Response, next: NextFunction) => {
-    const { sensorId, temperature, humidity, userId } = req.body;
+    const { sensorId, temperature, humidity, luminosity, userId } = req.body;
 
-    if (!sensorId || !temperature || !humidity || !userId) {
+    if (!sensorId || !temperature || !humidity || !luminosity || !userId) {
         return res.status(400).json({
 
-            message: "Bad Request: sensor_id, temperature, humidity, user_id are required!"
+            message: "Bad Request: sensor_id, temperature, humidity, luminosity, user_id are required!"
 
         });
     }
@@ -21,6 +21,7 @@ createEspData.post("/", async (req: Request, res: Response, next: NextFunction) 
                 sensorId,
                 temperature,
                 humidity,
+                luminosity,
                 userId,
             
             },
