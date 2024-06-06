@@ -20,7 +20,8 @@ model User {
 }
 
 model Espressif {
-  sensorId    Int      @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
+  sensorId    Int
   temperature Float?
   humidity    Float?
   luminosity  Int?
