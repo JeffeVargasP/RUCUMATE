@@ -9,7 +9,7 @@ createEspData.post("/", async (req: Request, res: Response, next: NextFunction) 
     if (!sensorId || !temperature || !humidity || !luminosity || !userId) {
         return res.status(400).json({
 
-            message: "Bad Request: sensor_id, temperature, humidity, luminosity, user_id are required!"
+            message: "Bad Request: sensorId, temperature, humidity, luminosity, userId are required!"
 
         });
     }
