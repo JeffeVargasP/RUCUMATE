@@ -36,7 +36,11 @@ loginUser.post("/", async (req: Request, res: Response) => {
 
     res.status(200).json({
         message: "Authentication successful",
-        user: user,
+        user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+        },
         token: token,
     });
 
