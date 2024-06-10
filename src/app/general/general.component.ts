@@ -1,22 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { EspressifService } from '../../service/espressif.service';
-import { ChartModule } from 'primeng/chart';
-import { SensorData } from '../../sensor-data';
+import { EspressifService } from '../service/espressif.service';
+import { SensorData } from '../sensor-data';
+
 
 @Component({
   selector: 'app-general',
-  standalone: true,
-  imports: [RouterOutlet, ChartModule],
-  providers: [EspressifService],
   templateUrl: './general.component.html',
-  styleUrl: './general.component.scss'
+  styleUrls: ['./general.component.scss'],
 })
 export class GeneralComponent implements OnInit {
 
   data: any;
   options: any;
   sensorData: SensorData[] | undefined;
+
   constructor(private espressifService: EspressifService) { }
 
   ngOnInit(): void {
@@ -35,15 +32,16 @@ export class GeneralComponent implements OnInit {
           {
             label: 'Temperatura',
             data: temperatureData,
-            fill: false,
+            fill: true,
             borderColor: '#FF5722',
             backgroundColor: 'rgba(255, 87, 34, 0.2)',
-            tension: 0.4
+            tension: 0.4,
+            
           },
           {
             label: 'Umidade',
             data: humidityData,
-            fill: false,
+            fill: true,
             borderColor: '#42A5F5',
             backgroundColor: 'rgba(66, 165, 245, 0.2)',
             tension: 0.4
@@ -51,10 +49,10 @@ export class GeneralComponent implements OnInit {
           {
             label: 'Luminosidade',
             data: luminosityData,
-            fill: false,
+            fill: true,
             borderColor: '#FFEB3B',
             backgroundColor: 'rgba(255, 235, 59, 0.2)',
-            tension: 0.4
+            tension: 0.4,
           }
         ]
       };

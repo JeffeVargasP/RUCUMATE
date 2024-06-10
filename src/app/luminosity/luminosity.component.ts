@@ -1,16 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartModule } from 'primeng/chart';
-import { EspressifService } from '../../service/espressif.service';
+import { EspressifService } from '../service/espressif.service';
 
 @Component({
-  selector: 'app-humidity',
-  standalone: true,
-  imports: [ChartModule],
-  providers: [EspressifService],
-  templateUrl: './humidity.component.html',
-  styleUrls: ['./humidity.component.scss']
+  selector: 'app-luminosity',
+  templateUrl: './luminosity.component.html',
+  styleUrls: ['./luminosity.component.scss']
 })
-export class HumidityComponent implements OnInit {
+export class LuminosityComponent implements OnInit {
 
   data: any;
   options: any;
@@ -23,22 +19,22 @@ export class HumidityComponent implements OnInit {
       this.sensorData = res;
 
       const labels = this.sensorData.map((item: any) => new Date(item.createdAt).toLocaleTimeString());
-      const humidityData = this.sensorData.map((item: any) => item.humidity);
+      const luminosityData = this.sensorData.map((item: any) => item.luminosity);
 
       this.data = {
         labels: labels,
         datasets: [
           {
-            label: 'Umidade',
-            data: humidityData,
+            label: 'Luminosidade',
+            data: luminosityData,
             fill: true,
-            borderColor: '#42A5F5',
-            backgroundColor: 'rgba(66, 165, 245, 0.2)',
+            borderColor: '#FFEB3B',
+            backgroundColor: 'rgba(255, 235, 59, 0.2)',
             tension: 0.4,
             pointRadius: 5,
             pointHoverRadius: 7,
-            pointBackgroundColor: '#42A5F5',
-            pointHoverBackgroundColor: '#42A5F5'
+            pointBackgroundColor: '#FFEB3B',
+            pointHoverBackgroundColor: '#FFEB3B'
           }
         ]
       };
@@ -80,47 +76,24 @@ export class HumidityComponent implements OnInit {
         scales: {
           x: {
             ticks: {
-              color: '#ffffff',
-              font: {
-                size: 12
-              }
+              color: '#ffffff'
             },
             grid: {
               color: 'rgba(255, 255, 255, 0.2)',
               drawBorder: false
-            },
-            title: {
-              display: true,
-              text: 'Tempo',
-              color: '#ffffff',
-              font: {
-                size: 14
-              }
             }
           },
           y: {
             ticks: {
-              color: '#ffffff',
-              font: {
-                size: 12
-              }
+              color: '#ffffff'
             },
             grid: {
               color: 'rgba(255, 255, 255, 0.2)',
               drawBorder: false
-            },
-            title: {
-              display: true,
-              text: 'Umidade (%)',
-              color: '#ffffff',
-              font: {
-                size: 14
-              }
             }
           }
         }
       };
     });
   }
-
 }

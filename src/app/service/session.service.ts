@@ -36,5 +36,4 @@ export class SessionService {
       this.session.next(JSON.parse(session));
     }
   }
-
 }

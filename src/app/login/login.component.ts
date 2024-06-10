@@ -1,20 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from '../service/user.service';
 import { Router } from '@angular/router';
-import { UserService } from '../../service/user.service';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Message, MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
-import { MessagesModule } from 'primeng/messages';
-import { SessionService } from '../../service/session.service';
+import { SessionService } from '../service/session.service';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, ToastModule, MessagesModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 
