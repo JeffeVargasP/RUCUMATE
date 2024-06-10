@@ -32,7 +32,7 @@ export class GeneralComponent implements OnInit {
           {
             label: 'Temperatura',
             data: temperatureData,
-            fill: true,
+            fill: false,
             borderColor: '#FF5722',
             backgroundColor: 'rgba(255, 87, 34, 0.2)',
             tension: 0.4,
@@ -41,7 +41,7 @@ export class GeneralComponent implements OnInit {
           {
             label: 'Umidade',
             data: humidityData,
-            fill: true,
+            fill: false,
             borderColor: '#42A5F5',
             backgroundColor: 'rgba(66, 165, 245, 0.2)',
             tension: 0.4
@@ -49,7 +49,7 @@ export class GeneralComponent implements OnInit {
           {
             label: 'Luminosidade',
             data: luminosityData,
-            fill: true,
+            fill: false,
             borderColor: '#FFEB3B',
             backgroundColor: 'rgba(255, 235, 59, 0.2)',
             tension: 0.4,
