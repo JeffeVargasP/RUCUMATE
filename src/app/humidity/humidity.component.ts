@@ -76,6 +76,8 @@ export class HumidityComponent implements OnInit {
               }
             },
             y: {
+              min: 0,
+              max: 100,
               ticks: {
                 color: '#ffffff',
               },
@@ -156,4 +158,7 @@ export class HumidityComponent implements OnInit {
       }
     });
   }
+
+
+  
 }
