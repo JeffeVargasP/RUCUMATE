@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { EspressifService } from '../service/espressif.service';
+import { Observable, Subscription, take } from 'rxjs';
+import { SensorData } from '../sensor-data';
+import { Store } from '@ngrx/store';
+import { selectSensorData } from '../state/sensor.selectors';
+import { loadSensorData } from '../state/sensor.actions';
 
 @Component({
   selector: 'app-humidity',
@@ -9,115 +14,146 @@ import { EspressifService } from '../service/espressif.service';
 export class HumidityComponent implements OnInit {
 
   data: any;
+  userId: any;
   options: any;
-  sensorData: any;
+  sensorData$: Observable<SensorData[]>;
+  private subscription: Subscription | undefined;
+  private intervalId: any;
+  private maxDataPoints = 10;
+  private currentPosition = 0;
 
-  constructor(private espressifService: EspressifService) { }
+  constructor(private store: Store) {
+    this.sensorData$ = this.store.select(selectSensorData);
+    this.userId = JSON.parse(sessionStorage.getItem('session') || '{}');
+  }
 
   ngOnInit(): void {
-    this.espressifService.getEspressif().subscribe((res: any) => {
-      this.sensorData = res;
+    this.store.dispatch(loadSensorData());
+    this.intervalId = setInterval(() => {
+      this.store.dispatch(loadSensorData());
+    }, 5000); // Atualiza a cada 5 segundos
 
-      const labels = this.sensorData.map((item: any) => new Date(item.createdAt).toLocaleTimeString());
-      const humidityData = this.sensorData.map((item: any) => item.humidity);
+    this.subscription = this.sensorData$.subscribe((sensorData) => {
+      if (sensorData) {
+        const limitedSensorData = sensorData.slice(this.currentPosition, this.currentPosition + this.maxDataPoints);
+        const labels = limitedSensorData.map(item => new Date(item.createdAt).toLocaleTimeString());
+        const humidityData = limitedSensorData.map(item => item.humidity);
+        this.data = {
+          labels: labels,
+          datasets:
+            [
+              {
+                label: 'Umidade',
+                data: humidityData,
+                fill: true,
+                borderColor: '#42A5F5',
+                backgroundColor: 'rgba(66, 165, 245, 0.2)',
+                tension: 0.4
+              },
+            ],
 
-      this.data = {
-        labels: labels,
-        datasets: [
-          {
-            label: 'Umidade',
-            data: humidityData,
-            fill: true,
-            borderColor: '#42A5F5',
-            backgroundColor: 'rgba(66, 165, 245, 0.2)',
-            tension: 0.4,
-            pointRadius: 5,
-            pointHoverRadius: 7,
-            pointBackgroundColor: '#42A5F5',
-            pointHoverBackgroundColor: '#42A5F5'
-          }
-        ]
-      };
+        };
 
-      this.options = {
-        maintainAspectRatio: false,
-        aspectRatio: 0.6,
-        responsive: true,
-        interaction: {
-          mode: 'index',
-          intersect: false
-        },
-        plugins: {
-          legend: {
-            display: true,
-            labels: {
-              color: '#ffffff',
-              font: {
-                size: 14
+        this.options = {
+          animation: false,
+          maintainAspectRatio: false,
+          aspectRatio: 0.6,
+          plugins: {
+            legend: {
+              labels: {
+                color: '#ffffff'
               }
             }
           },
-          tooltip: {
-            enabled: true,
-            mode: 'index',
-            intersect: false,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            titleFont: {
-              size: 16
-            },
-            bodyFont: {
-              size: 14
-            },
-            footerFont: {
-              size: 12
-            }
-          }
-        },
-        scales: {
-          x: {
-            ticks: {
-              color: '#ffffff',
-              font: {
-                size: 12
+          scales: {
+            x: {
+              ticks: {
+                color: '#ffffff',
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.2)',
+                drawBorder: false
               }
             },
-            grid: {
-              color: 'rgba(255, 255, 255, 0.2)',
-              drawBorder: false
-            },
-            title: {
-              display: true,
-              text: 'Tempo',
-              color: '#ffffff',
-              font: {
-                size: 14
-              }
-            }
-          },
-          y: {
-            ticks: {
-              color: '#ffffff',
-              font: {
-                size: 12
-              }
-            },
-            grid: {
-              color: 'rgba(255, 255, 255, 0.2)',
-              drawBorder: false
-            },
-            title: {
-              display: true,
-              text: 'Umidade (%)',
-              color: '#ffffff',
-              font: {
-                size: 14
+            y: {
+              ticks: {
+                color: '#ffffff',
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.2)',
+                drawBorder: false
               }
             }
           }
-        }
-      };
+        };
+
+      }
     });
   }
 
-}
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
 
+  async nextData(): Promise<void> {
+    const totalDataPoints = await this.sensorData$.pipe(take(1)).toPromise().then(sensorData => sensorData?.length || 0);
+    const nextPosition = await this.currentPosition + this.maxDataPoints;
+    if (nextPosition < totalDataPoints) {
+      this.currentPosition = nextPosition;
+      this.updateChartData();
+    }
+  }
+
+  previousData(): void {
+    const previousPosition = this.currentPosition - this.maxDataPoints;
+    if (previousPosition >= 0) {
+      this.currentPosition = previousPosition;
+      this.updateChartData();
+    }
+  }
+
+  previousChart(): void {
+    const previousPosition = this.currentPosition - this.maxDataPoints;
+    if (previousPosition >= 0) {
+      this.currentPosition = previousPosition;
+      this.updateChartData();
+    }
+  }
+
+  async nextChart(): Promise<void> {
+    const totalDataPoints = await this.sensorData$.pipe(take(1)).toPromise().then(sensorData => sensorData?.length || 0);
+    const nextPosition = await this.currentPosition + this.maxDataPoints;
+    if (nextPosition < totalDataPoints) {
+      this.currentPosition = nextPosition;
+      this.updateChartData();
+    }
+  }
+
+  private updateChartData(): void {
+    this.sensorData$.pipe(take(1)).subscribe((sensorData) => {
+      if (sensorData) {
+        const limitedSensorData = sensorData.slice(this.currentPosition, this.currentPosition + this.maxDataPoints);
+        const labels = limitedSensorData.map(item => new Date(item.createdAt).toLocaleTimeString());
+        const humidityData = limitedSensorData.map(item => item.humidity);
+        this.data = {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Umidade',
+              data: humidityData,
+              fill: true,
+              borderColor: '#42A5F5',
+              backgroundColor: 'rgba(66, 165, 245, 0.2)',
+              tension: 0.4
+            },
+          ],
+        };
+      }
+    });
+  }
+}

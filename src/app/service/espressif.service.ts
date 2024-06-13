@@ -17,4 +17,8 @@ export class EspressifService {
     return this.http.get(this.apiURL + 'esp/data');
   }
 
+  getEspressifByUserId(userId: string): Observable<any> {
+    return this.http.get(this.apiURL + 'esp/sensor/id/user/' + userId);
+  }
+
 }

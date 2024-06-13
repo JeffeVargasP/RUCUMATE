@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -18,6 +18,11 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GeneralComponent } from './general/general.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { sensorReducer } from './state/sensor.reducer';
+import { SensorEffects } from './state/sensor.effects';
 
 @NgModule({
   declarations: [
@@ -40,6 +45,9 @@ import { GeneralComponent } from './general/general.component';
     HttpClientModule,
     ChartModule,
     ToastModule,
+    StoreModule.forRoot({ sensor: sensorReducer }),
+    EffectsModule.forRoot([SensorEffects]),
+    StoreDevtoolsModule.instrument({ maxAge: 25 })
   ],
   providers: [],
   bootstrap: [AppComponent]
