@@ -16,14 +16,12 @@ createEspData.post("/", async (req: Request, res: Response, next: NextFunction) 
 
     try {
 
-        const data = await database.espressif.create({
+        const data = await database.sensorData.create({
             data: {
                 sensorId,
                 temperature,
                 humidity,
-                luminosity,
-                userId,
-            
+                luminosity            
             },
         });
         res.status(200).json(data);
